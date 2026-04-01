@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../../store/slices/authSlice';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { FiBriefcase } from 'react-icons/fi';
+import { FiSettings } from 'react-icons/fi';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,8 +17,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userInfo) {
-      if (userInfo.role === 'admin') navigate('/admin/dashboard');
-      else navigate('/employee/dashboard');
+      navigate('/dashboard');
     }
   }, [userInfo, navigate]);
 
@@ -28,7 +27,8 @@ const Login = () => {
       setLoading(true);
       const { data } = await api.post('/auth/login', { email, password });
       dispatch(setCredentials(data));
-      toast.success('Logged in successfully');
+      toast.success(`Welcome, ${data.name}!`);
+      navigate('/dashboard');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     } finally {
@@ -37,83 +37,69 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#e8eaf6] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 py-12 px-4 relative overflow-hidden">
+      {/* Decorative Background */}
+      <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-emerald-600/10 rounded-full filter blur-[120px]"></div>
+      <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full filter blur-[120px]"></div>
 
-      {/* Decorative Animated Background Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-300/40 rounded-full mix-blend-multiply filter blur-[80px] animate-pulse"></div>
-      <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-300/40 rounded-full mix-blend-multiply filter blur-[80px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-pink-300/40 rounded-full mix-blend-multiply filter blur-[80px] animate-pulse" style={{ animationDelay: '4s' }}></div>
-
-      {/* Claymorphism Main Card */}
-      <div className="max-w-md w-full space-y-8 bg-[#f3f4f8] p-10 rounded-[2.5rem] relative z-10 
-        shadow-[15px_15px_30px_#c3c6ce,_-15px_-15px_30px_#ffffff,inset_5px_5px_10px_#ffffff,inset_-5px_-5px_10px_#c3c6ce] 
-        border border-white/40">
-
+      <div className="max-w-md w-full space-y-8 bg-gray-900/80 backdrop-blur-xl p-10 rounded-3xl border border-gray-700/50 shadow-2xl relative z-10">
         <div className="flex flex-col items-center">
-          {/* Claymorphism Icon Container */}
-          <div className="bg-primary-500 rounded-2xl p-4 mb-4 flex items-center justify-center
-            shadow-[6px_6px_12px_#c3c6ce,_-6px_-6px_12px_#ffffff,inset_3px_3px_6px_rgba(255,255,255,0.4),inset_-3px_-3px_6px_rgba(0,0,0,0.1)]">
-            <FiBriefcase className="text-white text-3xl drop-shadow-md" />
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-4 mb-4 shadow-lg shadow-emerald-500/20">
+            <FiSettings className="text-white text-3xl" />
           </div>
-          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-800 tracking-tight">
-            Sign in to Lexa<span className="text-primary-500">CRM</span>
+          <h2 className="mt-2 text-center text-3xl font-extrabold text-white tracking-tight">
+            Lexa<span className="text-emerald-400">ERP</span>
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-500 font-medium">
-            Welcome back! Please enter your details.
+          <p className="mt-2 text-center text-sm text-gray-400 font-medium">
+            Manufacturing ERP — Sign in to continue
           </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={submitHandler}>
           <div className="flex flex-col gap-5">
             <div>
-              <label className="sr-only">Email address</label>
-              {/* Claymorphism Input (Pressed-in effect) */}
+              <label className="block text-sm text-gray-400 mb-2">Email Address</label>
               <input
                 id="email-address"
-                name="email"
                 type="email"
                 required
-                className="appearance-none block w-full px-5 py-4 bg-[#f3f4f8] rounded-2xl text-gray-700 placeholder-gray-400 
-                border-transparent focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all
-                shadow-[inset_6px_6px_12px_#c3c6ce,inset_-6px_-6px_12px_#ffffff]"
-                placeholder="Email address"
+                className="w-full px-5 py-3.5 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
-              <label className="sr-only">Password</label>
-              {/* Claymorphism Input (Pressed-in effect) */}
+              <label className="block text-sm text-gray-400 mb-2">Password</label>
               <input
                 id="password"
-                name="password"
                 type="password"
                 required
-                className="appearance-none block w-full px-5 py-4 bg-[#f3f4f8] rounded-2xl text-gray-700 placeholder-gray-400 
-                border-transparent focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all
-                shadow-[inset_6px_6px_12px_#c3c6ce,inset_-6px_-6px_12px_#ffffff]"
-                placeholder="Password"
+                className="w-full px-5 py-3.5 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="pt-2">
-            {/* Claymorphism Button (Popped-out 3D effect) */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-4 px-4 text-sm font-bold rounded-2xl text-white bg-primary-500 
-              hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all 
-              shadow-[8px_8px_16px_#c3c6ce,_-8px_-8px_16px_#ffffff,inset_3px_3px_6px_rgba(255,255,255,0.4),inset_-3px_-3px_6px_rgba(0,0,0,0.1)]
-              active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.2),inset_-4px_-4px_8px_rgba(255,255,255,0.2)] 
-              disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 px-4 text-sm font-bold rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-white"></div>
+                Signing in...
+              </span>
+            ) : 'Sign in'}
+          </button>
         </form>
+
+        <p className="text-center text-xs text-gray-600 mt-6">
+          LexaERP Manufacturing v2.0 — Enterprise Resource Planning
+        </p>
       </div>
     </div>
   );

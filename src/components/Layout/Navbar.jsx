@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { FiMenu, FiBell, FiUser } from 'react-icons/fi';
+import { FiMenu, FiBell, FiLogOut, FiUser } from 'react-icons/fi';
 import { logout } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,51 +14,48 @@ const Navbar = ({ setSidebarOpen }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex w-full bg-white drop-shadow-sm justify-between px-4 py-4 md:px-6">
-      <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-30 flex w-full justify-between items-center px-4 py-3 md:px-6 border-b border-gray-800/50" style={{ backgroundColor: '#0f1117' }}>
+      <div className="flex items-center gap-3">
         <button
           onClick={(e) => {
             e.stopPropagation();
             setSidebarOpen(true);
           }}
-          className="z-50 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm lg:hidden"
+          className="block rounded-lg border border-gray-700 p-2 lg:hidden hover:bg-gray-800 transition-colors"
         >
-          <FiMenu className="text-2xl text-gray-500" />
+          <FiMenu className="text-xl text-gray-400" />
         </button>
         <div className="hidden sm:block">
-          <h1 className="text-xl font-semibold text-gray-800">
+          <h1 className="text-lg font-semibold text-white">
             Welcome, {userInfo?.name?.split(' ')[0] || 'User'}
           </h1>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <button className="relative p-2 text-gray-500 hover:text-gray-700 transition-colors bg-gray-100 rounded-full">
-          <FiBell className="text-xl" />
-          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
+      <div className="flex items-center gap-3">
+        <button className="relative p-2 text-gray-400 hover:text-white transition-colors hover:bg-gray-800 rounded-lg">
+          <FiBell className="text-lg" />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500"></span>
         </button>
 
-        <div className="relative flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <div className="hidden text-right lg:block">
-            <span className="block text-sm font-medium text-black">
+            <span className="block text-sm font-medium text-white">
               {userInfo?.name}
             </span>
-            <span className="block text-xs font-semibold text-primary-600 uppercase">
-              {userInfo?.role}
+            <span className="block text-xs text-emerald-400 uppercase">
+              {userInfo?.roleLabel || userInfo?.role?.replace(/_/g, ' ')}
             </span>
           </div>
-          <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 border border-primary-200 cursor-pointer overflow-hidden shadow-sm">
-             {userInfo?.avatar ? (
-                <img src={userInfo.avatar} alt="User" className="w-full h-full object-cover" />
-             ) : (
-                <FiUser className="text-xl" />
-             )}
+          <div className="h-9 w-9 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm font-bold">
+            {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <button
             onClick={handleLogout}
-            className="text-sm font-medium text-red-600 hover:text-red-800 ml-2 transition-colors border border-red-200 bg-red-50 px-3 py-1.5 rounded-md"
+            className="flex items-center gap-1.5 text-sm font-medium text-red-400 hover:text-red-300 ml-1 transition-colors bg-red-900/20 hover:bg-red-900/40 px-3 py-1.5 rounded-lg border border-red-800/30"
           >
-            Logout
+            <FiLogOut size={14} />
+            <span className="hidden sm:inline">Logout</span>
           </button>
         </div>
       </div>

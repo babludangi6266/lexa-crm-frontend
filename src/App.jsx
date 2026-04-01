@@ -4,39 +4,57 @@ import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout/Layout';
 import Login from './pages/auth/Login';
 
-// Admin Imports
-import AdminDashboard from './pages/admin/Dashboard';
-import Clients from './pages/admin/Clients';
-import Projects from './pages/admin/Projects';
-import Employees from './pages/admin/Employees';
-import AdminTasks from './pages/admin/Tasks';
-import Invoices from './pages/admin/Invoices';
+// Dashboard
+import Dashboard from './pages/dashboard/Dashboard';
 
-// Employee Imports
-import EmployeeDashboard from './pages/employee/Dashboard';
-import MyTasks from './pages/employee/MyTasks';
-import MyProjects from './pages/employee/MyProjects';
-import Profile from './pages/employee/Profile';
+// Sales Pipeline
+import Enquiries from './pages/sales/Enquiries';
+import SalesOffers from './pages/sales/SalesOffers';
+import SaleOrders from './pages/sales/SaleOrders';
+import SaleOrderDetail from './pages/sales/SaleOrderDetail';
 
-// Shared
-import CalendarView from './pages/shared/CalendarView';
-import ChatView from './pages/shared/ChatView';
-import LeadsView from './pages/shared/Leads';
+// Design & BOM
+import BOMList from './pages/design/BOMList';
+import BOMDetail from './pages/design/BOMDetail';
+import ItemMaster from './pages/design/ItemMaster';
 
-// Reports
-import ReportsView from './pages/employee/Reports';
+// Procurement
+import PurchaseOrders from './pages/procurement/PurchaseOrders';
+import Vendors from './pages/procurement/Vendors';
+import GRNList from './pages/procurement/GRNList';
 
-const ProtectedRoute = ({ children, role }) => {
+// Inventory
+import StockLevels from './pages/inventory/StockLevels';
+import Warehouses from './pages/inventory/Warehouses';
+
+// Production
+import WorkOrders from './pages/production/WorkOrders';
+import WorkOrderDetail from './pages/production/WorkOrderDetail';
+import ShopFloor from './pages/production/ShopFloor';
+
+// Quality
+import IQCInspections from './pages/quality/IQCInspections';
+import OQCInspections from './pages/quality/OQCInspections';
+
+// Despatch & Service
+import DespatchList from './pages/despatch/DespatchList';
+import ServiceList from './pages/service/ServiceList';
+
+// Finance
+import Invoices from './pages/finance/Invoices';
+import InvoicePDF from './pages/finance/InvoicePDF';
+
+// HR
+import Employees from './pages/hr/Employees';
+
+// Shared / Existing
+// (Legacy features such as Chat, Calendar, Reports, Leads have been disabled to focus purely on the 10-step Manufacturing Workflow)
+
+const ProtectedRoute = ({ children }) => {
   const { userInfo } = useSelector((state) => state.auth);
-  
   if (!userInfo) {
     return <Navigate to="/login" replace />;
   }
-
-  if (role && userInfo.role !== role) {
-    return <Navigate to="/" replace />;
-  }
-
   return children;
 };
 
@@ -55,36 +73,60 @@ function App() {
              path="/" 
              element={
                userInfo ? (
-                 <Navigate to={userInfo.role === 'admin' ? '/admin/dashboard' : '/employee/dashboard'} replace />
+                 <Navigate to="/dashboard" replace />
                ) : (
                  <Navigate to="/login" replace />
                )
              } 
           />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<ProtectedRoute role="admin"><Layout /></ProtectedRoute>}>
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="calendar" element={<CalendarView />} />
-            <Route path="chat" element={<ChatView />} />
-            <Route path="leads" element={<LeadsView />} />
-            <Route path="clients" element={<Clients />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="employees" element={<Employees />} />
-            <Route path="tasks" element={<AdminTasks />} />
-            <Route path="invoices" element={<Invoices />} />
-          </Route>
+          {/* All ERP Routes — protected behind Layout */}
+          <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            {/* Dashboard */}
+            <Route path="dashboard" element={<Dashboard />} />
 
-          {/* Employee Routes */}
-          <Route path="/employee" element={<ProtectedRoute role="employee"><Layout /></ProtectedRoute>}>
-            <Route path="dashboard" element={<EmployeeDashboard />} />
-            <Route path="calendar" element={<CalendarView />} />
-            <Route path="chat" element={<ChatView />} />
-            <Route path="leads" element={<LeadsView />} />
-            <Route path="reports" element={<ReportsView />} />
-            <Route path="tasks" element={<MyTasks />} />
-            <Route path="projects" element={<MyProjects />} />
-            <Route path="profile" element={<Profile />} />
+            {/* Sales Pipeline */}
+            <Route path="enquiries" element={<Enquiries />} />
+            <Route path="sales-offers" element={<SalesOffers />} />
+            <Route path="sale-orders" element={<SaleOrders />} />
+            <Route path="sale-orders/:id" element={<SaleOrderDetail />} />
+            <Route path="customers" element={<Enquiries />} /> {/* Reuses clients for now */}
+
+            {/* Design & BOM */}
+            <Route path="bom" element={<BOMList />} />
+            <Route path="bom/:id" element={<BOMDetail />} />
+            <Route path="items" element={<ItemMaster />} />
+
+            {/* Procurement */}
+            <Route path="purchase-orders" element={<PurchaseOrders />} />
+            <Route path="vendors" element={<Vendors />} />
+            <Route path="grn" element={<GRNList />} />
+
+            {/* Inventory */}
+            <Route path="inventory" element={<StockLevels />} />
+            <Route path="warehouses" element={<Warehouses />} />
+
+            {/* Production */}
+            <Route path="work-orders" element={<WorkOrders />} />
+            <Route path="work-orders/:id" element={<WorkOrderDetail />} />
+            <Route path="shop-floor" element={<ShopFloor />} />
+
+            {/* Quality */}
+            <Route path="quality/iqc" element={<IQCInspections />} />
+            <Route path="quality/oqc" element={<OQCInspections />} />
+
+            {/* Despatch & Service */}
+            <Route path="despatch" element={<DespatchList />} />
+            <Route path="service" element={<ServiceList />} />
+
+            {/* Finance */}
+            <Route path="invoices" element={<Invoices />} />
+            <Route path="invoices/:id/pdf" element={<InvoicePDF />} />
+
+            {/* HR */}
+            <Route path="employees" element={<Employees />} />
+
+            {/* Shared - Disabled */}
           </Route>
         </Routes>
       </Router>
